@@ -27,27 +27,21 @@ if __name__ == '__main__':
 
 
 
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                            download=True, transform=transform)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batchSize,
-                                              shuffle=True, num_workers=2)
-
-    testset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                           download=True, transform=transform)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=batchSize,
-                                             shuffle=False, num_workers=2)
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,download=True, transform=transform)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batchSize, shuffle=True, num_workers=2)
+    testset = torchvision.datasets.CIFAR10(root='./data', train=False,download=True, transform=transform)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=batchSize,shuffle=False, num_workers=2)
 
     classes = ('plane', 'car', 'bird', 'cat',
                'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
-
+       #正则化
     def imshow(img):
-        img = img / 2 + 0.5     # unnormalize
+        img = img / 2 + 0.5     
         npimg = img.numpy()
         plt.imshow(np.transpose(npimg, (1, 2, 0)))
         plt.show()
 
 
-    # get some random training images
     dataiter = iter(trainloader)
     images, labels = dataiter.next()
 
@@ -83,11 +77,10 @@ if __name__ == '__main__':
     net = Net()
 
     import torch.optim as optim
-
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=learnL, momentum=mom)
 
-    for epoch in range(epochNum):  # loop over the dataset multiple times
+    for epoch in range(epochNum):
 
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
@@ -119,7 +112,7 @@ if __name__ == '__main__':
 
     correct = 0
     total = 0
-    # since we're not training, we don't need to calculate the gradients for our outputs
+
     with torch.no_grad():
         for data in testloader:
             images, labels = data
