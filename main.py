@@ -57,17 +57,22 @@ if __name__ == '__main__':
     class Net(nn.Module):
         def __init__(self):
             super().__init__()
+            #卷积层1输入为3（3通道）
             self.conv1 = nn.Conv2d(3, C1Out, C1Kernel)
+            #池化层，大小为2
             self.pool = nn.MaxPool2d(PoolSize, 2)
+            #卷积层2
             self.conv2 = nn.Conv2d(C1Out,C2Out , C2Kernel)
+            #全连接层，输入要根据之前的卷积层确定
             self.fc1 = nn.Linear(C2Out * 5 * 5, linearNum2)
             self.fc2 = nn.Linear(linearNum2, linearNum3)
             self.fc3 = nn.Linear(linearNum3, 10)
 
         def forward(self, x):
+            #前向传播，利用同一个池化层
             x = self.pool(F.relu(self.conv1(x)))
             x = self.pool(F.relu(self.conv2(x)))
-            x = torch.flatten(x, 1)  # flatten all dimensions except batch
+            x = torch.flatten(x, 1)  
             x = F.relu(self.fc1(x))
             x = F.relu(self.fc2(x))
             x = self.fc3(x)
