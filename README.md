@@ -1,35 +1,19 @@
 ### 一、简单介绍：
-CIFAR10数据集是由十类32\*32*3的彩色图像组成的，如飞机、鸟等类别下各有若干图片，现采用卷积神经网络对十类图片做分类任务，并调节参数分析作用。
-### 二、模型选择：
-#### 网络采用两个卷积层两个池化层三个全连接层实现。可以调节的参数有：  
-卷积层1的输出通道数：C1Out  
-卷积层1的卷积核大小：C1Kernel  
-卷积层1的步长（选择默认不改变）：C1Step  
-卷积层2的输出通道数：C2Out  
-卷积层2的卷积核大小：C2Kernel  
-卷积层2的步长（选择默认不改变）：C2Step  
-池化层大小（选择2不改变）：PoolSize  
-全连接层第二层神经元个数：linearNum2  
-全连接层第三层神经元个数：linearNum3  
-学习轮次：epochNum  
-学习率：learnL  
-学习动量大小：mom  
-批大小：batchSize  
-池化层方式：最大池化  
-### 三、初始参数设置及效果：  
-C1Out=6            #卷积层1的输出通道数  
-C1Kernel=5         #卷积层1的卷积核大小  
-C1Step=1           #卷积层1的步长（选择默认不改变）  
-C2Out=12           #卷积层2的输出通道数  
-C2Kernel=5         #卷积层2的卷积核大小  
-C2Step=1           #卷积层2的步长（选择默认不改变）  
-PoolSize=2         #池化层大小（选择2不改变）  
-linearNum2=120     #全连接层第二层神经元个数  
-linearNum3=84      #全连接层第三层神经元个数  
-epochNum=2         #学习轮次  
-learnL=0.001        #学习率  
-mom=0.9           #学习动量大小  
-batchSize=32       #批大小   
+CIFAR10数据集是一个用于识别普适物体的小型数据集,一共包含 10 个类别的 RGB 彩色图 片：飞机（ a叩lane ）、汽车（ automobile ）、鸟类（ bird ）、猫（ cat ）、鹿（ deer ）、狗（ dog ）、蛙类（ frog ）、马（ horse ）、船（ ship ）和卡车（ truck ）。共有60000张彩色图像，这些图像式32*32*3，分为10个类，每个类6000张,这里面有50000张用于训练，构成5个训练批，每一批10000张图；另外10000张用于测试，单独构成一批。测试批的数据里，取自10类中的每一类，每一类随机取1000张。现采用卷积神经网络对十类图片做分类任务，并调节参数分析作用。
+### 二、数据读取与展示：
+安装第三方包torchvision，使用如下函数读取数据集：
+
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,download=True, transform=transform)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=batchSize,shuffle=True, num_workers=2)
+可使用函数来展示一张图片：
+
+    def imshow(img):
+        img = img / 2 + 0.5     
+        npimg = img.numpy()
+        plt.imshow(np.transpose(npimg, (1, 2, 0)))
+        plt.show()
+### 二、模型选择与参数设置：
+#### 网络采用两个卷积层两个池化层三个全连接层实现： 
 
     class Net(nn.Module):
         def __init__(self):
@@ -53,6 +37,36 @@ batchSize=32       #批大小
             x = F.relu(self.fc2(x))
             x = self.fc3(x)
             return x  
+#### 可以调节的参数有：
+卷积层1的输出通道数：C1Out  
+卷积层1的卷积核大小：C1Kernel  
+卷积层1的步长（选择默认不改变）：C1Step  
+卷积层2的输出通道数：C2Out  
+卷积层2的卷积核大小：C2Kernel  
+卷积层2的步长（选择默认不改变）：C2Step  
+池化层大小（选择2不改变）：PoolSize  
+全连接层第二层神经元个数：linearNum2  
+全连接层第三层神经元个数：linearNum3  
+学习轮次：epochNum  
+学习率：learnL  
+学习动量大小：mom  
+批大小：batchSize  
+池化层方式：最大池化  
+### 三、初始参数设置：  
+C1Out=6            #卷积层1的输出通道数  
+C1Kernel=5         #卷积层1的卷积核大小  
+C1Step=1           #卷积层1的步长（选择默认不改变）  
+C2Out=12           #卷积层2的输出通道数  
+C2Kernel=5         #卷积层2的卷积核大小  
+C2Step=1           #卷积层2的步长（选择默认不改变）  
+PoolSize=2         #池化层大小（选择2不改变）  
+linearNum2=120     #全连接层第二层神经元个数  
+linearNum3=84      #全连接层第三层神经元个数  
+epochNum=2         #学习轮次  
+learnL=0.001        #学习率  
+mom=0.9           #学习动量大小  
+batchSize=32       #批大小   
+
 效果如下： ![参数调整前效果](https://github.com/ZhouZhongZeWHU/CIFAR10/blob/main/beforeResult.png)
 可见，准确率不高只有30%，经过每两百个图片的学习后损失下降也很慢，从0.229降低到了0.190
 ### 四、参数调整
