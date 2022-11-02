@@ -96,7 +96,7 @@ if __name__ == '__main__':
             optimizer.step()
             running_loss += loss.item()
             if i % 200 == 199:  
-                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+                print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 200:.3f}')
                 running_loss = 0.0
 
     print('Finished Training')
